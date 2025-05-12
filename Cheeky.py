@@ -17,6 +17,15 @@ print(args.path)
 # load haar classifiers
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
+def save_cheeks(results, imgs, meanLeft, meanRight, meanCheek, stdLeft, stdRight, stdCheek):
+    results.write(imgs+"\n")
+    results.write("Left Cheek: MEAN RGB: R: "+str(meanLeft[2])+", G: "+str(meanLeft[1])+", B: "+str(meanLeft[0])+"\n")
+    results.write("Left Cheek: STDDEV: R: "+str(stdLeft[1][2][0])+", G: "+str(stdLeft[1][1][0])+", B: "+str(stdLeft[1][0][0])+"\n")
+    results.write("Right Cheek: MEAN RGB: R: "+str(meanRight[2])+", G: "+str(meanRight[1])+", B: "+str(meanRight[0])+"\n")
+    results.write("Right Cheek: STDDEV: R: "+str(stdRight[1][2][0])+", G: "+str(stdRight[1][1][0])+", B: "+str(stdRight[1][0][0])+"\n")
+    results.write("Total: MEAN RGB: R: "+str(meanCheek[2])+", G: "+str(meanCheek[1])+", B: "+str(meanCheek[0])+"\n")
+    results.write("Total: STDDEV: R: "+str(stdCheek[2])+", G: "+str(stdCheek[1])+", B: "+str(stdCheek[0])+"\n\n")
+
 # process each cheek
 def process_cheek(cheek_img, label):
     # mean RGB and standard dev
@@ -126,13 +135,7 @@ def find_multiple_images(imagePath, savePath, face_cascade, results):
                     totalStdRGB = [totalStdRGB[0]+stdCheek[0],totalStdRGB[1]+stdCheek[1],totalStdRGB[2]+stdCheek[2]]
                     
                     #write on file
-                    results.write(imgs+"\n")
-                    results.write("Left Cheek: MEAN RGB: R: "+str(meanLeft[2])+", G: "+str(meanLeft[1])+", B: "+str(meanLeft[0])+"\n")
-                    results.write("Left Cheek: STDDEV: R: "+str(stdLeft[1][2][0])+", G: "+str(stdLeft[1][1][0])+", B: "+str(stdLeft[1][0][0])+"\n")
-                    results.write("Right Cheek: MEAN RGB: R: "+str(meanRight[2])+", G: "+str(meanRight[1])+", B: "+str(meanRight[0])+"\n")
-                    results.write("Right Cheek: STDDEV: R: "+str(stdRight[1][2][0])+", G: "+str(stdRight[1][1][0])+", B: "+str(stdRight[1][0][0])+"\n")
-                    results.write("Total: MEAN RGB: R: "+str(meanCheek[2])+", G: "+str(meanCheek[1])+", B: "+str(meanCheek[0])+"\n")
-                    results.write("Total: STDDEV: R: "+str(stdCheek[2])+", G: "+str(stdCheek[1])+", B: "+str(stdCheek[0])+"\n\n")
+                    save_cheeks(results, imgs, meanLeft, meanRight, meanCheek, stdLeft, stdRight, stdCheek)
 
                     # draw cheek squares for visualization
                     cv2.rectangle(img, (left_cheek_x, left_cheek_y), 
@@ -228,13 +231,7 @@ def find_one_image(imagePath, savePath, face_cascade, results):
             stdCheek = [(stdLeft[1][0][0]+stdRight[1][0][0])/2, (stdLeft[1][1][0]+stdRight[1][1][0])/2,(stdLeft[1][2][0]+stdRight[1][2][0])/2]
 
             #write on file
-            results.write(imagePath+"\n")
-            results.write("Left Cheek: MEAN RGB: R: "+str(meanLeft[2])+", G: "+str(meanLeft[1])+", B: "+str(meanLeft[0])+"\n")
-            results.write("Left Cheek: STDDEV: R: "+str(stdLeft[1][2][0])+", G: "+str(stdLeft[1][1][0])+", B: "+str(stdLeft[1][0][0])+"\n")
-            results.write("Right Cheek: MEAN RGB: R: "+str(meanRight[2])+", G: "+str(meanRight[1])+", B: "+str(meanRight[0])+"\n")
-            results.write("Right Cheek: STDDEV: R: "+str(stdRight[1][2][0])+", G: "+str(stdRight[1][1][0])+", B: "+str(stdRight[1][0][0])+"\n")
-            results.write("Total: MEAN RGB: R: "+str(meanCheek[2])+", G: "+str(meanCheek[1])+", B: "+str(meanCheek[0])+"\n")
-            results.write("Total: STDDEV: R: "+str(stdCheek[2])+", G: "+str(stdCheek[1])+", B: "+str(stdCheek[0])+"\n\n")
+            save_cheeks(results, imagePath, meanLeft, meanRight, meanCheek, stdLeft, stdRight, stdCheek)
                 
             # draw cheek squares for visualization
             cv2.rectangle(img, (left_cheek_x, left_cheek_y), 
