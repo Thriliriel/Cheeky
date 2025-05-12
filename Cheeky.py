@@ -143,9 +143,16 @@ def find_multiple_images(imagePath, savePath, face_cascade, results):
                     cv2.rectangle(img, (right_cheek_x, right_cheek_y), 
                                   (right_cheek_x + square_size, right_cheek_y + square_size), (255, 0, 255), 2)
 
+                    #rgb patch at the bottom right corner
+                    # Create a small rectangle with that color (20% of face)
+                    recW = round(w/5)
+                    recH = round(h/5)
+                    color_patch = cv2.rectangle(img.copy(), (img.shape[1] - recW, img.shape[0] - recH), 
+                                        (img.shape[1] - 10, img.shape[0] - 10), (meanCheek[0], meanCheek[1], meanCheek[2]), -1)
+
                     # if a path was provided to save the cheek image, save it
                     if savePath != "":
-                        cv2.imwrite(savePath+imgs, img)
+                        cv2.imwrite(savePath+imgs, color_patch)
             
             except Exception as error:
                 print("A problem occurred: "+ str(error)+ "\n")
@@ -239,12 +246,19 @@ def find_one_image(imagePath, savePath, face_cascade, results):
             cv2.rectangle(img, (right_cheek_x, right_cheek_y), 
                             (right_cheek_x + square_size, right_cheek_y + square_size), (255, 0, 255), 2)
 
+            #rgb patch at the bottom right corner
+            # Create a small rectangle with that color (20% of face)
+            recW = round(w/5)
+            recH = round(h/5)
+            color_patch = cv2.rectangle(img.copy(), (img.shape[1] - recW, img.shape[0] - recH), 
+                                        (img.shape[1] - 10, img.shape[0] - 10), (meanCheek[0], meanCheek[1], meanCheek[2]), -1)
+
             # if a path was provided to save the cheek image, save it
             if savePath != "":
-                cv2.imwrite(savePath+imagePath, img)
+                cv2.imwrite(savePath+imagePath, color_patch)            
 
             # show image with cheek squares
-            cv2.imshow('Cheeky!', img)
+            cv2.imshow('Cheeky!', color_patch)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
